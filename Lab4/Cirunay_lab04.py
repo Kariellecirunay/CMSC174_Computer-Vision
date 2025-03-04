@@ -23,17 +23,14 @@ def adaptive_threshold(image, block_size=19, C=4):
 
 # Contour Detection and Filtering Function
 def apply_contours(original, binary):
+
     contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    
-    # Filter out small contours
-    min_area = 5000
-    filtered_contours = [cnt for cnt in contours if cv2.contourArea(cnt) > min_area]
-    filtered_contours = sorted(filtered_contours, key=cv2.contourArea, reverse=True)
+    filtered_contours = sorted(contours, key=cv2.contourArea, reverse=True)
 
     # Draw contours 
     contoured_image = original.copy()
-    cv2.drawContours(contoured_image, [filtered_contours[0]], -1, (0, 255, 0), 2)  
-    cv2.drawContours(contoured_image, [filtered_contours[1]], -1, (0, 0, 255), 2) 
+    cv2.drawContours(contoured_image, [filtered_contours[0]], -1, (0, 255, 0), 5)  
+    cv2.drawContours(contoured_image, [filtered_contours[1]], -1, (0, 0, 255), 5) 
 
     return contoured_image, filtered_contours[:2]  
 
@@ -77,7 +74,7 @@ for i, area in enumerate(shell_areas):
         print(f"Approximate Shell Area for Image {i+1}: Not Detected")
 
 # Display images in a landscape layout
-fig, axes = plt.subplots(2, 3, figsize=(15, 6))
+fig, axes = plt.subplots(2, 3, figsize=(12, 6))
 
 for i in range(len(resized_images )):
     axes[0, i].imshow(cv2.cvtColor(binary_images[i], cv2.COLOR_GRAY2RGB))
