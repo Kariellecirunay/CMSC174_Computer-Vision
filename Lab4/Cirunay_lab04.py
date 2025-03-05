@@ -5,10 +5,21 @@ import matplotlib.pyplot as plt
 # Load and resize images
 image_files = ['Shell001.png', 'Shell002.png', 'Shell003.png']
 images = [cv2.imread(img) for img in image_files]
-resized_images = [cv2.resize(img, (800, 600)) for img in images]
+
+# Resize while maintaining aspect ratio
+target_width = 800  #target width
+resized_images = []
+
+for img in images:
+    if img is not None:
+        h, w = img.shape[:2] 
+        scale = target_width / w 
+        new_size = (target_width, int(h * scale))  
+        resized_img = cv2.resize(img, new_size, interpolation=cv2.INTER_AREA)
+        resized_images.append(resized_img)
 
 # Convert to grayscale and apply Gaussian blur
-grayscale_images = [cv2.GaussianBlur(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), (9, 9), 0) for img in resized_images ]
+grayscale_images = [cv2.GaussianBlur(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), (5, 5), 0) for img in resized_images ]
 
 # Adaptive Thresholding Function
 def adaptive_threshold(image, block_size=19, C=4):  
